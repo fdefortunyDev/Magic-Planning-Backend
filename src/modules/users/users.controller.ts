@@ -2,40 +2,63 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @ApiTags('Users')
+@ApiSecurity('apikey')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
   @ApiOperation({ summary: `Get all users` })
+  @Get()
   findAll() {
-    return this.usersService.findAll();
+    try{
+      return this.usersService.findAll();
+    }catch(error){
+      console.log(error);
+    }
   }
 
-  @Get(':id')
   @ApiOperation({ summary: `Get one user by id` })
+  @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOneUserById(id);
+    try{
+      return this.usersService.findOneUserById(id);
+    }catch(error){
+      console.log(error);
+    }
   }
 
-  @Post()
   @ApiOperation({ summary: `Create one user` })
+  @ApiCreatedResponse({ type: UserResponseDto })
+  @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    try{
+      return this.usersService.create(createUserDto);
+    }catch(error){
+      console.log(error);
+    }
   }
 
-  @Patch(':id')
   @ApiOperation({ summary: `Edit one user by id` })
+  @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    try{
     return this.usersService.update(id, updateUserDto);
+    }catch(error){
+      console.log(error);
+    }
   }
 
-  @Delete(':id')
   @ApiOperation({ summary: `Delete one user by id` })
+  @Delete(':id')
   delete(@Param('id') id: string) {
+    try{
     return this.usersService.delete(id);
+    }catch(error){
+      console.log(error);
+    }
   }
 }
