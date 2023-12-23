@@ -18,11 +18,15 @@ export class RoomsRepositoryService {
           createdAt: 1 
         }
       }
-    ]).exec();
+    ]);
+  }
+
+  async findOneById(roomId: string){
+    return await this.roomModel.findById(roomId);
   }
 
   async findOneByName(name: string) {
-    return await this.roomModel.findOne({ name: name }).exec();
+    return await this.roomModel.findOne({ name: name });
   }
 
   async saveOne(roomDto: CreateRoomDto) {
@@ -31,6 +35,6 @@ export class RoomsRepositoryService {
 
   async remove(id: string) {
     const roomId = new Types.ObjectId(id);
-    await this.roomModel.findByIdAndDelete(roomId).exec();
+    await this.roomModel.findByIdAndDelete(roomId);
   }
 }

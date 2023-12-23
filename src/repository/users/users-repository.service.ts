@@ -3,7 +3,6 @@ import { User, UserDocument } from './schema/users.schema';
 import { Model, Types } from 'mongoose';
 import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/modules/users/dto/update-user.dto';
-import { LoginUserDto } from 'src/modules/users/dto/login-user.dto';
 
 export class UsersRepositoryService {
   constructor(
@@ -12,16 +11,23 @@ export class UsersRepositoryService {
   ) {}
 
   async findAllUsers() {
-    return await this.userModel.find().exec();
+    return await this.userModel.find();
   }
 
   async findOneUserById(id: string) {
     const userId = new Types.ObjectId(id);
-    return await this.userModel.findById(new Types.ObjectId(userId)).exec();
+    return await this.userModel.findById(userId);
   }
 
   async findOneUserByEmail(email: string) {
-    return await this.userModel.findOne({ email: email }).exec();
+    return await this.userModel.findOne({ email: email });
+  }
+
+  async findOneUserByIdAndUpdate(id: string, updateUserDto: UpdateUserDto) {
+    const userId = new Types.ObjectId(id);
+    return await this.userModel
+      .findByIdAndUpdate(userId, updateUserDto, { new: true })
+      .exec();
   }
 
   async saveOneUser(userData: CreateUserDto) {
@@ -36,6 +42,6 @@ export class UsersRepositoryService {
 
   async deleteOneUserById(id: string) {
     const userId = new Types.ObjectId(id);
-    await this.userModel.findByIdAndDelete(userId).exec();
+    await this.userModel.findByIdAndDelete(userId);
   }
 }

@@ -5,38 +5,39 @@ import {
   PreconditionFailedException,
 } from '@nestjs/common';
 import { IncomingHttpHeaders } from 'http';
-import { verify } from 'jsonwebtoken';
 import 'dotenv/config';
+import { AuthService } from './auth.service';
+import { GeneralError } from 'src/utils/enums/errors/general-error.enum';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
+  constructor(
+    private readonly authService: AuthService
+    ){}
+
   async canActivate(context: ExecutionContext) {
     try {
       const request = context.switchToHttp().getRequest();
-      const headers: IncomingHttpHeaders = request || {};
+      const { headers }: { headers: IncomingHttpHeaders } = request || {};
 
       const { authorization } = headers;
-
       if (!authorization) {
-        throw new PreconditionFailedException('Token is required in headers');
+        throw new PreconditionFailedException(GeneralError.requiredToken);
       }
 
       const bearerToken = authorization as string;
       const token = bearerToken.split(' ')[1];
 
       if (!token) {
-        throw new PreconditionFailedException('Invalid token');
+        throw new PreconditionFailedException(GeneralError.notValidToken);
       }
 
-      return this.validateToken(token);
+      return this.authService.validateToken(token);
     } catch (err) {
       console.log(err);
       return false;
     }
   }
 
-  async validateToken(token: string): Promise<boolean> {
-    verify(token, process.env.JWT_SECRET!);
-    return true;
-  }
+ 
 }

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -67,6 +68,17 @@ export class UsersController {
   logIn(@Body() loginUserDto: LoginUserDto) {
     try {
       return this.usersService.logIn(loginUserDto);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  @ApiOperation({ summary: `Join room` })
+  @UseGuards(JwtAuthGuard)
+  @Patch(':roomId')
+  joinRoom(@Param('roomId') roomId: string, @Request() request) {
+    try {
+      return this.usersService.joinRoom(roomId, request);
     } catch (error) {
       console.log(error);
     }

@@ -1,6 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { RoomsRepositoryService } from 'src/repository/rooms/rooms-repository.service';
+import { RoomError } from 'src/utils/enums/errors/room-error.enum';
 
 @Injectable()
 export class RoomsService {
@@ -11,23 +12,17 @@ export class RoomsService {
   }
 
   async findOneByName(name: string) {
-    const namePrefix = "room_";
-    name = namePrefix + name;
     const room = await this.roomRepositoryService.findOneByName(name);
-    console.log(room)
-    if(room){
-      return room;
-    }else{
-      throw new NotFoundException(`${name} not found`);
+    if(!room){
+      throw new NotFoundException(RoomError.notFound);
     }
+    return room;
   }
 
   async create(createRoomDto: CreateRoomDto) {
-    const namePrefix = "room_";
-    createRoomDto.name = namePrefix + createRoomDto.name;
     const roomAlreadyExists = await this.roomRepositoryService.findOneByName(createRoomDto.name);
     if (roomAlreadyExists) {
-      throw new ConflictException('This room already exists');
+      throw new ConflictException(RoomError.alreadyExists);
     }
     return await this.roomRepositoryService.saveOne(createRoomDto);
   }

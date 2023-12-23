@@ -12,10 +12,10 @@ import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     MongooseModule.forRoot(process.env.URI_MONGODB!),
-    PassportModule.register({ defaultStrategy: 'headerapikey' }),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '3s' },
+      secret: process.env.JWT_SECRET!,
+      signOptions: { expiresIn: '5s' },
     }),
     AuthModule,
     UsersModule,

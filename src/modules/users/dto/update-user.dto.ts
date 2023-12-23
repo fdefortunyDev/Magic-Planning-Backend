@@ -1,39 +1,39 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
 import {
-  IsBoolean,
   IsEmail,
-  IsNotEmpty,
   IsOptional,
   IsString,
+  IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { LoginUserDto } from './login-user.dto';
+import { randomUUID } from 'crypto';
 
 export class UpdateUserDto extends PartialType(LoginUserDto) {
-  @ApiProperty()
+  @ApiProperty({ example: 'Paco' })
   @IsString()
   @IsOptional()
   @MinLength(3)
   name?: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'paco@gmail.com' })
   @IsString()
   @IsOptional()
   @IsEmail()
   email?: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '25101994' })
   @IsString()
   @IsOptional()
   @MinLength(8)
   @MaxLength(20)
   password?: string;
 
-  @ApiProperty()
-  @IsBoolean()
+  @ApiProperty({ example: randomUUID() })
+  @IsString()
   @IsOptional()
-  loggedIn?: boolean;
+  @IsUUID()
+  roomId?: string;
 }
