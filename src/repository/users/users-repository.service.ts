@@ -3,6 +3,7 @@ import { User, UserDocument } from './schema/users.schema';
 import { Model, Types } from 'mongoose';
 import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/modules/users/dto/update-user.dto';
+import { LoginUserDto } from 'src/modules/users/dto/login-user.dto';
 
 export class UsersRepositoryService {
   constructor(
@@ -27,8 +28,10 @@ export class UsersRepositoryService {
     return await this.userModel.create(userData);
   }
 
-  async updateOneUserById(userId: string, updateUserDto: UpdateUserDto){
-    return await this.userModel.findByIdAndUpdate(userId, updateUserDto, {new: true});
+  async updateOneUserById(userId: string, updateUserDto: UpdateUserDto) {
+    return await this.userModel
+      .findByIdAndUpdate(userId, updateUserDto, { new: true })
+      .exec();
   }
 
   async deleteOneUserById(id: string) {

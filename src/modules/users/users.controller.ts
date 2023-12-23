@@ -1,63 +1,95 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOperation, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserResponseDto } from './dto/user-response.dto';
+import { LoginUserDto } from './dto/login-user.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth';
 
 @ApiTags('Users')
 @ApiSecurity('apikey')
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiOperation({ summary: `Get all users` })
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
-    try{
+    try {
       return this.usersService.findAll();
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
   }
 
   @ApiOperation({ summary: `Get one user by id` })
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
-    try{
+    try {
       return this.usersService.findOneUserById(id);
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
   }
 
-  @ApiOperation({ summary: `Create one user` })
+  @ApiOperation({ summary: `Register one user` })
   @ApiCreatedResponse({ type: UserResponseDto })
-  @Post()
+  @Post('/register')
   create(@Body() createUserDto: CreateUserDto) {
-    try{
+    try {
       return this.usersService.create(createUserDto);
-    }catch(error){
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  @ApiOperation({ summary: `Login user` })
+  @Post('login')
+  logIn(@Body() loginUserDto: LoginUserDto) {
+    try {
+      return this.usersService.logIn(loginUserDto);
+    } catch (error) {
       console.log(error);
     }
   }
 
   @ApiOperation({ summary: `Edit one user by id` })
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    try{
-    return this.usersService.update(id, updateUserDto);
-    }catch(error){
+    try {
+      return this.usersService.update(id, updateUserDto);
+    } catch (error) {
       console.log(error);
     }
   }
 
   @ApiOperation({ summary: `Delete one user by id` })
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   delete(@Param('id') id: string) {
-    try{
-    return this.usersService.delete(id);
-    }catch(error){
+    try {
+      return this.usersService.delete(id);
+    } catch (error) {
       console.log(error);
     }
   }

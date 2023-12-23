@@ -14,14 +14,17 @@ export type UserDocument = User & Document;
   },
 })
 export class User {
-  @Prop()
+  @Prop({ type: String })
   name: string;
 
-  @Prop()
+  @Prop({ type: String })
   email: string;
 
-  @Prop()
+  @Prop({ type: String })
   password: string;
+
+  @Prop({ type: String || null, default: null })
+  roomId: string | null;
 }
 
 const UserSchema = SchemaFactory.createForClass(User);

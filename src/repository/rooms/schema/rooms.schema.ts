@@ -14,10 +14,10 @@ export type RoomDocument = Room & Document;
   },
 })
 export class Room {
-  @Prop()
+  @Prop({ type: String })
   name: string;
 
-  @Prop()
+  @Prop({ type: String })
   password: string;
 }
 
