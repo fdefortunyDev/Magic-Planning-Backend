@@ -50,9 +50,9 @@ export class ChatsGateway
         client.id,
       );
       this.user = this.connectedClient.user;
-    } catch (e) {
+    } catch (error) {
       client.disconnect();
-      console.error(e);
+      console.error('[WebSocketError] ',error.name);
     }
   }
 
@@ -60,8 +60,8 @@ export class ChatsGateway
     try {
       this.chatsService.removeClient(client, client.id);
       this.server.emit('ClientDisconnected', { clientId: client.id });
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error('[WebSocketError] ',error.name);
     }
   }
 
@@ -80,8 +80,8 @@ export class ChatsGateway
       const roomId = room._id.toString();
       client.join(roomId);
       console.log(`${this.user.name} se unio a la sala ${roomId}`);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error('[WebSocketError] ',error.name);
     }
   }
 
@@ -98,8 +98,8 @@ export class ChatsGateway
       }
 
       client.leave(room._id.toString());
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error('[WebSocketError] ',error.name);
     }
   }
 
@@ -111,8 +111,8 @@ export class ChatsGateway
           client.leave(room);
         }
       });
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error('[WebSocketError] ',error.name);
     }
   }
 
@@ -123,8 +123,8 @@ export class ChatsGateway
         (value) => value !== client.id,
       );
       this.server.to(client.id).emit('isAlreadyInRoom', isAlreadyInRoom);
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error('[WebSocketError] ',error.name);
     }
   }
 
@@ -144,14 +144,14 @@ export class ChatsGateway
       if (!Types.ObjectId.isValid(projectId)) {
         throw new WsException(GeneralError.notValidId);
       }
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error('[WebSocketError] ',error.name);
     }
 
     try {
       this.server.to(room).emit(event, { payload, userName });
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
+      console.error('[WebSocketError] ',error.name);
     }
   }
 
@@ -166,7 +166,9 @@ export class ChatsGateway
       throw new WsException(GeneralError.notValidToken);
     }
 
-    return await this.authService.decodedToken(token);
+    const decodedToken = await this.authService.decodedToken(token);
+    const { data } = JSON.parse(JSON.stringify(decodedToken))
+    return JSON.parse(data);
   }
 
   async getRoom(roomId: string) {
