@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { UserDto } from './dto/user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepositoryService } from '../../repository/users/users-repository.service';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -32,7 +32,7 @@ export class UsersService {
     return await this.usersRepositoryService.findOneUserById(id);
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: UserDto) {
     const { email, password } = createUserDto;
     const userAlreadyExist =
       await this.usersRepositoryService.findOneUserByEmail(email);
@@ -81,8 +81,11 @@ export class UsersService {
     }
 
     const parsedPayload = JSON.parse(JSON.stringify(payload));
-    const user = await this.usersRepositoryService.findOneUserByIdAndUpdate(parsedPayload.id, { roomId });
-    if(!user){
+    const user = await this.usersRepositoryService.findOneUserByIdAndUpdate(
+      parsedPayload.id,
+      { roomId },
+    );
+    if (!user) {
       throw new NotFoundException(UserError.notFound);
     }
     return user;

@@ -3,7 +3,6 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import 'dotenv/config';
-import passport from 'passport';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,7 +10,7 @@ async function bootstrap() {
   app.enableCors();
 
   const config = new DocumentBuilder()
-  .setTitle('BFF Magic Planning')
+  .setTitle('BFF Magic Planning Poker')
   .setDescription('Planning sprints with magic')
   .setVersion('1.0')
   .setContact(

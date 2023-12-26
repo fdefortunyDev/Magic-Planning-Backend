@@ -14,17 +14,23 @@ export class AuthService {
 
   async generateToken(payload: string): Promise<string> {
     return this.jwtService.sign(
-      payload, 
-      {
-        secret: process.env.JWT_SECRET
-      },
+      { data: payload }, 
+      { 
+        secret: process.env.JWT_SECRET,
+        expiresIn: '1h' ,
+      }
       
     );
   }
 
   async validateToken(token: string): Promise<boolean> {
-    verify(token, process.env.JWT_SECRET!);
-    return true;
+    try{
+      verify(token, process.env.JWT_SECRET!);
+      return true;
+    }catch(err){
+      console.error('[validateToken] ', err.name);
+      return false;
+    }
   }
 
   async decodedToken(token: string) {

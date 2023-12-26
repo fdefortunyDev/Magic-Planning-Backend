@@ -19,6 +19,14 @@ export class RoomsService {
     return room;
   }
 
+  async findOneById(id: string) {
+    const room = await this.roomRepositoryService.findOneById(id);
+    if(!room){
+      throw new NotFoundException(RoomError.notFound);
+    }
+    return room;
+  }
+
   async create(createRoomDto: CreateRoomDto) {
     const roomAlreadyExists = await this.roomRepositoryService.findOneByName(createRoomDto.name);
     if (roomAlreadyExists) {

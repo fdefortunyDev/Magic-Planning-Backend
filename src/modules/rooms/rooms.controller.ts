@@ -48,6 +48,16 @@ export class RoomsController {
     }
   }
 
+  @ApiOperation({ summary: `Get one room by id` })
+  @Get(':id')
+  findOneById(@Param('id') id: string) {
+    try {
+      return this.roomsService.findOneByName(id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   @ApiOperation({ summary: `Create one room` })
   @ApiCreatedResponse({ type: RoomResponseDto })
   @Post()

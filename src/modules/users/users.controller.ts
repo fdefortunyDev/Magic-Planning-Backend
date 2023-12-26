@@ -10,7 +10,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { UserDto } from './dto/user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBearerAuth,
@@ -55,7 +55,7 @@ export class UsersController {
   @ApiOperation({ summary: `Register one user` })
   @ApiCreatedResponse({ type: UserResponseDto })
   @Post('/register')
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: UserDto) {
     try {
       return this.usersService.create(createUserDto);
     } catch (error) {

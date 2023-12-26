@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schema/users.schema';
 import { Model, Types } from 'mongoose';
-import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';
+import { UserDto } from 'src/modules/users/dto/user.dto';
 import { UpdateUserDto } from 'src/modules/users/dto/update-user.dto';
 
 export class UsersRepositoryService {
@@ -30,7 +30,7 @@ export class UsersRepositoryService {
       .exec();
   }
 
-  async saveOneUser(userData: CreateUserDto) {
+  async saveOneUser(userData: UserDto) {
     return await this.userModel.create(userData);
   }
 
